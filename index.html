@@ -80,7 +80,7 @@
       }
     </style>
 
-    <p>Select department: <select id = "opts">
+    <p>Select department: <select id="opts">
       <option hidden>-- Select University Department --</option>
       <optgroup label="University of Auckland">
         <option value="UoABiology">Biology</option>
@@ -127,10 +127,10 @@
       </optgroup>
     </select></p>
 
-    <p><div id="data-controls">
-      <input name="mode" type="radio" value="raw" id="raw" onclick="function updateraw()" checked><label for="data-raw"> Raw data</label>
-      <input name="mode" type="radio" value="percent" id="percent" onclick="function updatepercent()"><label for="data-percent"> Percentage</label>
-    </div></p>
+    <p>
+      <input name="mode" type="radio" value="raw" id="raw" checked><label for="data-raw"> Raw data</label>
+      <input name="mode" type="radio" value="percent" id="percent" ><label for="data-percent"> Percentage</label>
+    </p>
 
     <script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
     <script id="jsbin-javascript">
@@ -567,147 +567,204 @@
           .attr('height', yScale.rangeBand())
           .on('mouseover', tipF.show)
           .on('mouseout', tipF.hide);
-    } 
+    };
 
     function updatepercent(exampleData) {
 
-    // GET THE TOTAL POPULATION SIZE AND CREATE A FUNCTION FOR RETURNING THE PERCENTAGE
-    /*var totalPopulation = exampleData.map(function(d) { return d.male; });
-        //var totalPopulation = d3.sum(exampleData, function(d) { return d.male + d.female; }),
-        percentage = function(d) { return d / totalPopulation; };
-
-    // find the maximum data value on either side since this will be shared by both of the x-axes
-*/
-    var maxValue = Math.max(
-      d3.max(exampleData, function(d) { return (1); }),
-      d3.max(exampleData, function(d) { return (1); })
-    );
+      // find the maximum data value on either side since this will be shared by both of the x-axes
+      var maxValue = Math.max(
+        d3.max(exampleData, function(d) { return (1); }),
+        d3.max(exampleData, function(d) { return (1); })
+      );
 
 
-    // Graph title
-    svg.append("text")
-        .attr("x", (w/2)) 
-        .attr("y", "-11px")            
-        .attr("text-anchor", "middle")  
-        .style("font-size", "18px") 
-        .text("Career Progression in "+ "University Departments" +"");
+      // Graph title
+      svg.append("text")
+          .attr("x", (w/2)) 
+          .attr("y", "-11px")            
+          .attr("text-anchor", "middle")  
+          .style("font-size", "18px") 
+          .text("Career Progression in "+ "University Departments" +"");
 
-    // SET UP SCALES
-      
-    // the xScale goes from 0 to the width of a region, it will be reversed for the left x-axis
-    var xScale = d3.scale.linear()
-      .domain([0, maxValue])
-      .range([0, regionWidth])
-      .nice();
+      // SET UP SCALES
+        
+      // the xScale goes from 0 to the width of a region, it will be reversed for the left x-axis
+      var xScale = d3.scale.linear()
+        .domain([0, maxValue])
+        .range([0, regionWidth])
+        .nice();
 
-    var xScaleLeft = d3.scale.linear()
-      .domain([0, maxValue])
-      .range([regionWidth, 0]);
+      var xScaleLeft = d3.scale.linear()
+        .domain([0, maxValue])
+        .range([regionWidth, 0]);
 
-    var xScaleRight = d3.scale.linear()
-      .domain([0, maxValue])
-      .range([0, regionWidth]);
+      var xScaleRight = d3.scale.linear()
+        .domain([0, maxValue])
+        .range([0, regionWidth]);
 
-    var yScale = d3.scale.ordinal()
-      .domain(exampleData.map(function(d) { return d.group; }))
-      .rangeRoundBands([h,0], 0.1);
+      var yScale = d3.scale.ordinal()
+        .domain(exampleData.map(function(d) { return d.group; }))
+        .rangeRoundBands([h,0], 0.1);
 
 
-    // SET UP AXES
-    var yAxisLeft = d3.svg.axis()
-      .scale(yScale)
-      .orient('right')
-      .tickSize(4,0)
-      .tickPadding(margin.middle-4);
+      // SET UP AXES
+      var yAxisLeft = d3.svg.axis()
+        .scale(yScale)
+        .orient('right')
+        .tickSize(4,0)
+        .tickPadding(margin.middle-4);
 
-    var yAxisRight = d3.svg.axis()
-      .scale(yScale)
-      .orient('left')
-      .tickSize(4,0)
-      .tickFormat('');
+      var yAxisRight = d3.svg.axis()
+        .scale(yScale)
+        .orient('left')
+        .tickSize(4,0)
+        .tickFormat('');
 
-    var xAxisRight = d3.svg.axis()
-      .scale(xScale)
-      .orient('bottom')
-      .tickFormat(d3.format("%"));
+      var xAxisRight = d3.svg.axis()
+        .scale(xScale)
+        .orient('bottom')
+        .tickFormat(d3.format("%"));
 
-    var xAxisLeft = d3.svg.axis()
-      // REVERSE THE X-AXIS SCALE ON THE LEFT SIDE BY REVERSING THE RANGE
-      .scale(xScale.copy().range([pointA, 0]))
-      .orient('bottom')
-      .tickFormat(d3.format("%"));
+      var xAxisLeft = d3.svg.axis()
+        // REVERSE THE X-AXIS SCALE ON THE LEFT SIDE BY REVERSING THE RANGE
+        .scale(xScale.copy().range([pointA, 0]))
+        .orient('bottom')
+        .tickFormat(d3.format("%"));
 
-    // MAKE GROUPS FOR EACH SIDE OF CHART
-    // scale(-1,1) is used to reverse the left side so the bars grow left instead of right
-    var leftBarGroup = svg.append('g')
-      .attr('transform', translation(pointA, 0) + 'scale(-1,1)');
-    var rightBarGroup = svg.append('g')
-      .attr('transform', translation(pointB, 0));
+      // MAKE GROUPS FOR EACH SIDE OF CHART
+      // scale(-1,1) is used to reverse the left side so the bars grow left instead of right
+      var leftBarGroup = svg.append('g')
+        .attr('transform', translation(pointA, 0) + 'scale(-1,1)');
+      var rightBarGroup = svg.append('g')
+        .attr('transform', translation(pointB, 0));
 
-    // DRAW AXES
-    svg.append('g')
-      .attr('class', 'axis y left')
-      .attr('transform', translation(pointA, 0))
-      .call(yAxisLeft)
-      .selectAll('text')
-      .style('text-anchor', 'middle');
+      // DRAW AXES
+      svg.append('g')
+        .attr('class', 'axis y left')
+        .attr('transform', translation(pointA, 0))
+        .call(yAxisLeft)
+        .selectAll('text')
+        .style('text-anchor', 'middle');
 
-    svg.append('g')
-      .attr('class', 'axis y right')
-      .attr('transform', translation(pointB, 0))
-      .call(yAxisRight);
+      svg.append('g')
+        .attr('class', 'axis y right')
+        .attr('transform', translation(pointB, 0))
+        .call(yAxisRight);
 
-    svg.append('g')
-      .attr('class', 'axis x left')
-      .attr('transform', translation(0, h))
-      .call(xAxisLeft);
+      svg.append('g')
+        .attr('class', 'axis x left')
+        .attr('transform', translation(0, h))
+        .call(xAxisLeft);
 
-    svg.append('g')
-      .attr('class', 'axis x right')
-      .attr('transform', translation(pointB, h))
-      .call(xAxisRight);
+      svg.append('g')
+        .attr('class', 'axis x right')
+        .attr('transform', translation(pointB, h))
+        .call(xAxisRight);
 
-    // DRAW BARS
-    leftBarGroup.selectAll('.bar.left')
-      .data(exampleData)
-      .enter().append('rect')
-        .attr('class', 'bar left')
-        .attr('x', 0)
-        .attr('y', function(d) { return yScale(d.group); })
-        .attr('width', function(d) { return xScale(d.male/Math.max(d.male+d.female,0.1)); })
-        .attr('height', yScale.rangeBand())
-        .on('mouseover', tipMpercent.show)
-        .on('mouseout', tipMpercent.hide);;
+      // DRAW BARS
+      leftBarGroup.selectAll('.bar.left')
+        .data(exampleData)
+        .enter().append('rect')
+          .attr('class', 'bar left')
+          .attr('x', 0)
+          .attr('y', function(d) { return yScale(d.group); })
+          .attr('width', function(d) { return xScale(d.male/Math.max(d.male+d.female,0.1)); })
+          .attr('height', yScale.rangeBand())
+          .on('mouseover', tipMpercent.show)
+          .on('mouseout', tipMpercent.hide);;
 
-    rightBarGroup.selectAll('.bar.right')
-      .data(exampleData)
-      .enter().append('rect')
-        .attr('class', 'bar right')
-        .attr('x', 0)
-        .attr('y', function(d) { return yScale(d.group); })
-        .attr('width', function(d) { return xScale(d.female/Math.max(d.male+d.female,0.1)); })
-        .attr('height', yScale.rangeBand())
-        .on('mouseover', tipFpercent.show)
-        .on('mouseout', tipFpercent.hide);;
-    }
-
+      rightBarGroup.selectAll('.bar.right')
+        .data(exampleData)
+        .enter().append('rect')
+          .attr('class', 'bar right')
+          .attr('x', 0)
+          .attr('y', function(d) { return yScale(d.group); })
+          .attr('width', function(d) { return xScale(d.female/Math.max(d.male+d.female,0.1)); })
+          .attr('height', yScale.rangeBand())
+          .on('mouseover', tipFpercent.show)
+          .on('mouseout', tipFpercent.hide);;
+    };
 
     //update(UoABiology);
+    /*function drawRaw() {
+    var exampleData = eval(d3.select('#opts').property('value'));
+    svg.selectAll('*').remove();
+    updateraw(exampleData);
+    };
 
-    // handle on click event
+    function drawPercent() {
+    var exampleData = eval(d3.select('#opts').property('value'));
+    svg.selectAll('*').remove();
+    updatepercent(exampleData);
+    };*/
+
+    //MY OLD CODE
+    var radios = document.querySelectorAll('input[type=radio][name="mode"]');
+    
+    function radiobutton() {
+     if ( this.value === 'raw' ) {
+        var exampleData = eval(d3.select('#opts').property('value'));
+        svg.selectAll('*').remove();
+        updateraw(exampleData);} 
+     else if ( this.value === 'percent' ) {
+        var exampleData = eval(d3.select('#opts').property('value'));
+        svg.selectAll('*').remove();
+        updatepercent(exampleData);}  
+    }
+
+    Array.prototype.forEach.call(radios, function(radio) {
+       radio.addEventListener('change', radiobutton);
+    });
+
+    /*function optschange(exampleData) {
+      if (d3.select("input").value === 'raw') {
+        svg.selectAll('*').remove();
+        updateraw(exampleData);}
+      else if (d3.select("input").value === 'percent') {
+        svg.selectAll('*').remove();
+        updatepercent(exampleData);}
+    }
+
     d3.select('#opts')
     .on('change', function() {
     var exampleData = eval(d3.select(this).property('value'));
     svg.selectAll('*').remove();
-    updateraw(exampleData)});
+    optschange(exampleData);
+    }); */
 
 
-    /*// Enable mode buttons.
+
+    // handle on click event
+    /*d3.select('#opts')
+    .on('change', function() {
+    var exampleData = eval(d3.select(this).property('value'));
+    svg.selectAll('*').remove();
+    updatepercent(exampleData)});
+
+
+    // Enable mode buttons.
     d3.selectAll("#data-controls input[name=mode]").on("change", function() {
       svg.call(svg.duration(0).mode(this.value));
     });*/
 
+    d3.select('#opts').on('change', myGenericUpdateEvent);
+
+    function myGenericUpdateEvent(exampleData) {
+        var selectedRadio = document.querySelector('input[type=radio][name="mode"][checked]');
+        if ( selectedRadio.value === 'raw' ) {
+          d3.select('#opts')
+          .on('change', function() {
+          var exampleData = eval(d3.select(this).property('value'));
+          svg.selectAll('*').remove();
+          updateraw(exampleData)});} 
+        else {
+           d3.select('#opts')
+          .on('change', function() {
+          var exampleData = eval(d3.select(this).property('value'));
+          svg.selectAll('*').remove();
+          updatepercent(exampleData)});}
+    }
+
     </script>
-    <p><a href="index2.html">Show Percentages</a></p>
   </body>
 </html>
